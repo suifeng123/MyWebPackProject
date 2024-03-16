@@ -1,6 +1,8 @@
 // commonjs
+const minicss = require("mini-css-extract-plugin")
+const cssminimizer = require("css-minimizer-webpack-plugin")
 module.exports = {
-	mode: "none",
+	mode: "development",
 	entry: {
 		app: "./app.js"
 	},
@@ -14,9 +16,24 @@ module.exports = {
 	// loader
 	module: {
 		rules: [
-			{			
+			{	
+				test: /\.css/,
+				use: [minicss.loader,"css-loader"]
+			},
+			{
+				test: /\.(jpg|jpeg|png|gif|svg)$/,
+				loader: "url-loader",
+				options: {
+					limit: 2000000,
+					name: "[name].[hash].[ext]"
+				}
 			}
 		]
 	},
-	plugins: []
+	plugins: [
+		new minicss({
+			filename: "test.bundle.css"
+		}),
+		new cssminimizer()
+	]
 }
